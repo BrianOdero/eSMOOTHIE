@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "DBconfig/supabaseClient.js"  ]
+, "DBconfig/supabaseClient.ts"  ]
 }
