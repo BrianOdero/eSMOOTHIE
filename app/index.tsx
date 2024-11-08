@@ -18,6 +18,7 @@ export default function Index() {
   const [method,setMethod] = useState<string>("")
   const [rating,setRating] = useState<string>("")
 
+  //for fetching smoothie
   const fetchSmoothies = async () => {
     const {data,error} = await supabase
     .from('smoothies')
@@ -28,11 +29,18 @@ export default function Index() {
     }
     if(data){
       setSmoothies(data);
-      console.log(smoothies);
     }
   }
 
-  const createSmoothie = async () => {
+  //for adding smoothie
+  const createSmoothie = async (e: any) => {
+
+
+    if(!title || !method){
+      alert("Please make sure all fields have been filled out");
+      return;
+    }
+
     const {data,error} = await supabase
     .from('smoothies')
     .insert([{
@@ -48,6 +56,7 @@ export default function Index() {
       setTitle("");
       setMethod("");
     }
+
   }
 
   useEffect(() => {
@@ -58,17 +67,16 @@ export default function Index() {
 
   return (
     <View>
-     <Text>Welcome</Text>
-<Text>
-  {smoothies.map((smoothie) => (
-    <View key={smoothie.id} style={{borderBottomColor:'black',borderBottomWidth:3,borderTopColor:'black',borderTopWidth:3}}>
+      <Text>
+     {smoothies.map((smoothie) => (
+    <View key={smoothie.id} style={{borderBottomColor:'black',borderBottomWidth:3,margin:10}}>
       <Text>Smoothie ID: {smoothie.id}</Text>
       <Text>Title: {smoothie.title}</Text>
       <Text>Method: {smoothie.method}</Text>
       <Text>Created At: {smoothie.created_at}</Text>
     </View>
   ))}
-</Text>
+      </Text>
      <Text>Enter Title</Text>
      <TextInput
      value={title}
@@ -113,9 +121,9 @@ const styles = StyleSheet.create({
   input:{
     borderColor:'black',
     borderWidth:2,
-    padding:20,
-    margin:10,
-    height:10,
+    padding:4,
+    margin:5,
+    height:50,
     borderRadius:10,
     color:'black'
   }
