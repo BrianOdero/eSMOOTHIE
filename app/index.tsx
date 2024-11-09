@@ -1,8 +1,9 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import supabase from "@/DBconfig/supabaseClient";
 import { useEffect, useState } from "react";
 import { Timestamp } from "react-native-reanimated/lib/typescript/reanimated2/commonTypes";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 type smoothieData = {
   id:number,
@@ -14,9 +15,11 @@ type smoothieData = {
 export default function Index() {
 
   const [smoothies,setSmoothies] = useState<smoothieData[]>([]);
-  const [title,setTitle] = useState<string>("")
-  const [method,setMethod] = useState<string>("")
-  const [rating,setRating] = useState<string>("")
+  const [title,setTitle] = useState<string>("");
+  const [method,setMethod] = useState<string>("");
+
+  const router = useRouter();
+
 
   //for fetching smoothie
   const fetchSmoothies = async () => {
@@ -32,10 +35,10 @@ export default function Index() {
     }
   }
 
-  //for adding smoothie
-  const createSmoothie = async (e: any) => {
+  //for adding smoothiey
+  const createSmoothie = async () => {
 
-
+    //handling if all fields have been filled
     if(!title || !method){
       alert("Please make sure all fields have been filled out");
       return;
@@ -66,17 +69,35 @@ export default function Index() {
 
 
   return (
-    <View>
+    <ScrollView>
       <Text>
      {smoothies.map((smoothie) => (
+    <TouchableOpacity onPress={() => router.push({
+      pathname:"/smoothies",
+      params:{
+        smoothieId:smoothie.id,
+        title:smoothie.title,
+        method:smoothie.method,
+      }
+    })}>
     <View key={smoothie.id} style={{borderBottomColor:'black',borderBottomWidth:3,margin:10}}>
       <Text>Smoothie ID: {smoothie.id}</Text>
       <Text>Title: {smoothie.title}</Text>
       <Text>Method: {smoothie.method}</Text>
       <Text>Created At: {smoothie.created_at}</Text>
     </View>
+    </TouchableOpacity>
   ))}
       </Text>
+
+      <TouchableOpacity onPress={fetchSmoothies}>
+      <View style={styles.submit}>
+        <Text style={{color:'black'}}>Refresh</Text>
+      </View>
+     </TouchableOpacity>
+
+      <Text style={styles.addHeader}>FILL HERE TO ADD DATA TO DATABASE</Text>
+
      <Text>Enter Title</Text>
      <TextInput
      value={title}
@@ -93,12 +114,12 @@ export default function Index() {
      
 
      <TouchableOpacity onPress={createSmoothie}>
-      <View>
+      <View style={styles.submit}>
         <Text style={{color:'black'}}>Submit</Text>
       </View>
      </TouchableOpacity>
 
-    </View>
+    </ScrollView>
   );
 }
 
@@ -126,5 +147,20 @@ const styles = StyleSheet.create({
     height:50,
     borderRadius:10,
     color:'black'
+  },
+  addHeader:{
+    fontWeight:'bold',
+    fontSize:20,
+    margin:10,
+  },
+  submit:{
+    borderColor:'black',
+    borderWidth:2,
+    margin:10,
+    width:100,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'lightblue'
   }
+
 });
