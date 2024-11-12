@@ -56,6 +56,7 @@ export default function Index() {
     }
     if(data){
       console.log(data);
+      alert("Smoothie has been added");
       setTitle("");
       setMethod("");
     }
@@ -75,7 +76,7 @@ export default function Index() {
     <TouchableOpacity onPress={() => router.push({
       pathname:"/smoothies",
       params:{
-        smoothieId:smoothie.id,
+        Id:smoothie.id,
         title:smoothie.title,
         method:smoothie.method,
       }
@@ -146,7 +147,8 @@ const styles = StyleSheet.create({
     margin:5,
     height:50,
     borderRadius:10,
-    color:'black'
+    color:'black',
+    
   },
   addHeader:{
     fontWeight:'bold',
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
     width:100,
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'lightblue'
+    backgroundColor:'lightblue',
   }
 
 });
