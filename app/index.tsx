@@ -54,14 +54,16 @@ export default function Index() {
     }])
 
     alert("Smoothie has been added")
+    setMethod("")
+    setTitle("")
+    fetchSmoothies()
 
     if(error){
       console.log(error);
     }
     if(data){
       console.log(data);
-      setTitle("");
-      setMethod("");
+      
     }
 
   }
