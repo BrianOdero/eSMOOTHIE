@@ -17,6 +17,7 @@ export default function Index() {
   const [smoothies,setSmoothies] = useState<smoothieData[]>([]);
   const [title,setTitle] = useState<string>("");
   const [method,setMethod] = useState<string>("");
+  const [orderby, setOrderBy ] = useState<string>("id");
 
   const router = useRouter();
 
@@ -26,6 +27,7 @@ export default function Index() {
     const {data,error} = await supabase
     .from('smoothies')
     .select()
+    .order(orderby,{ascending:true})
 
     if(error){
       console.log(error);
@@ -51,12 +53,13 @@ export default function Index() {
       method,
     }])
 
+    alert("Smoothie has been added")
+
     if(error){
       console.log(error);
     }
     if(data){
       console.log(data);
-      alert("Smoothie has been added");
       setTitle("");
       setMethod("");
     }
@@ -65,7 +68,7 @@ export default function Index() {
 
   useEffect(() => {
     fetchSmoothies();
-  },[])
+  },[orderby])
 
 
 
@@ -73,13 +76,15 @@ export default function Index() {
     <ScrollView>
       <Text>
      {smoothies.map((smoothie) => (
-    <TouchableOpacity onPress={() => router.push({
+    <TouchableOpacity 
+      onPress={() => router.push({
       pathname:"/smoothies",
       params:{
         Id:smoothie.id,
         title:smoothie.title,
         method:smoothie.method,
       }
+      
     })}>
     <View key={smoothie.id} style={{borderBottomColor:'black',borderBottomWidth:3,margin:10}}>
       <Text>Smoothie ID: {smoothie.id}</Text>
@@ -91,11 +96,29 @@ export default function Index() {
   ))}
       </Text>
 
-      <TouchableOpacity onPress={fetchSmoothies}>
-      <View style={styles.submit}>
+      <View style={{display: "flex",flexDirection: "row"}}>
+      <TouchableOpacity onPress={() => setOrderBy("method")}>
+      <View>
+        <View style={styles.submit}>
         <Text style={{color:'black'}}>Refresh</Text>
       </View>
+       
+      </View>
      </TouchableOpacity>
+
+     <TouchableOpacity onPress={() => setOrderBy("id")}>
+     <View style={styles.submit}>
+        <Text style={{color:'black'}}>Order by ID</Text>
+       </View>
+     </TouchableOpacity>
+     
+     <TouchableOpacity onPress={() => setOrderBy("title")}>
+     <View style={styles.submit}>
+        <Text style={{color:'black'}}>Order by Name</Text>
+       </View>
+     </TouchableOpacity>
+
+      </View>
 
       <Text style={styles.addHeader}>FILL HERE TO ADD DATA TO DATABASE</Text>
 
