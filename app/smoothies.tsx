@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import supabase from '@/DBconfig/supabaseClient'
 
 const smoothies = () => {
@@ -9,6 +9,8 @@ const smoothies = () => {
 
     const [newTitle, setNewTitle] = useState<string>("");
     const [newMethod, setNewMethod] = useState<string>("");
+
+    const router = useRouter();
 
     const updateSmoothie = async () => {
         if (!newTitle || !newMethod) {
@@ -26,6 +28,8 @@ const smoothies = () => {
             .eq('id', Id)
             .single()
 
+            alert("Smoothie has been updated")
+
         if (error) {
             console.log(error);
         }
@@ -35,8 +39,26 @@ const smoothies = () => {
         }
     }
 
+    const deleteSmoothie = async () => {
+        const { data, error } = await supabase
+            .from('smoothies')
+            .delete()
+            .eq('id', Id)
+            .single()
+
+        alert("Smoothie has been deleted")
+        router.push("/")
+
+        if(error){
+            console.log(error);
+        }
+        if(data){
+            console.log(data);
+        }
+    }
+
     return (
-        <View style={styles.container}>
+        <View style={styles.container} >
 
             <Text style={{ fontSize: 20, marginBottom: 10, fontWeight: 'bold' }}>MODIFY THE FOLLOWING DATA</Text>
 
@@ -62,7 +84,14 @@ const smoothies = () => {
                     <Text style={{ color: 'black' }}>Press here to update the smoothie </Text>
                 </View>
             </TouchableOpacity>
-        </View>
+
+
+            <TouchableOpacity onPress={deleteSmoothie}>
+                <View style={styles.submit}>
+                    <Text style={{ color: 'black' }}>Press here to delete the smoothie </Text>
+                </View>
+            </TouchableOpacity>       
+             </View>
     )
 }
 
